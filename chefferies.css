@@ -1,0 +1,21 @@
+/* Page Chefferies */
+.chef-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin: 2rem 0 3rem;
+}
+@media (max-width: 800px){ .chef-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 500px){ .chef-grid { grid-template-columns: 1fr; } }
+.chef-card {
+  padding: 1.8rem;
+  background: var(--bg-alt);
+  border-left: 3px solid var(--accent-2);
+  transition: transform .4s var(--ease), background .4s var(--ease);
+}
+.chef-card:hover { transform: translateY(-4px); background: var(--ivoire); }
+.chef-card h3 {
+  font-family: var(--font-serif);
+  font-size: 1.5rem; margin-bottom: .6rem; color: var(--brun-bois);
+}
+.chef-card p { font-size: .95rem; }

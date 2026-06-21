@@ -1,0 +1,46 @@
+/* Page Festivals */
+.festivals-list { padding: clamp(4rem,8vw,7rem) 0; }
+.festival {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 3rem;
+  padding: 2.5rem 0;
+  border-top: 1px solid var(--bordure);
+  align-items: start;
+}
+.festival:last-child { border-bottom: 1px solid var(--bordure); }
+.festival-date {
+  display: flex; flex-direction: column;
+  font-family: var(--font-serif);
+}
+.festival-date span {
+  font-size: .8rem; letter-spacing: .25em;
+  text-transform: uppercase; color: var(--texte-doux);
+}
+.festival-date strong {
+  font-size: 2rem; font-weight: 400; color: var(--accent);
+  margin-top: .3rem;
+}
+.festival-body h3 {
+  font-family: var(--font-serif); font-size: 1.8rem;
+  color: var(--brun-bois); margin-bottom: .75rem;
+}
+.festival-body p { max-width: 720px; }
+@media (max-width: 700px){
+  .festival { grid-template-columns: 1fr; gap: .75rem; }
+}
+
+.sites { background: var(--vert-foret-fonce); color: var(--ivoire); }
+.sites .split-title h2, .sites .num { color: var(--ivoire); }
+.sites-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; }
+@media (max-width:900px){ .sites-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width:500px){ .sites-grid { grid-template-columns: 1fr; } }
+.site {
+  padding: 2rem;
+  background: rgba(245,239,228,.06);
+  border: 1px solid rgba(245,239,228,.12);
+  transition: background .3s var(--ease), transform .3s var(--ease);
+}
+.site:hover { background: rgba(245,239,228,.1); transform: translateY(-4px); }
+.site h3 { font-size: 1.3rem; margin-bottom: .75rem; color: var(--ocre-clair); }
+.site p { color: rgba(245,239,228,.75); font-size: .92rem; }
