@@ -31,13 +31,38 @@
     navToggle.addEventListener('click', () => {
       navToggle.classList.toggle('open');
       navMenu.classList.toggle('open');
+      // Bloquer le scroll quand le menu est ouvert
+      document.body.style.overflow = navMenu.classList.contains('open') ? 'hidden' : '';
     });
     navMenu.querySelectorAll('a').forEach(a =>
       a.addEventListener('click', () => {
         navToggle.classList.remove('open');
         navMenu.classList.remove('open');
+        document.body.style.overflow = '';
       })
     );
+
+    // ── SWIPE POUR FERMER ──────────────────────────────────
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    navMenu.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    navMenu.addEventListener('touchend', (e) => {
+      const deltaX = e.changedTouches[0].clientX - touchStartX;
+      const deltaY = Math.abs(e.changedTouches[0].clientY - touchStartY);
+
+      // Swipe vers la droite (deltaX > 60) et pas un scroll vertical
+      if (deltaX > 60 && deltaY < 80) {
+        navToggle.classList.remove('open');
+        navMenu.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    }, { passive: true });
+    // ───────────────────────────────────────────────────────
   }
 
   // Lien actif d'après le pathname
