@@ -26,41 +26,72 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
+  // Fonction utilitaire pour fermer le menu
+  const closeMenu = () => {
+    navToggle.classList.remove('open');
+    navMenu.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
   // Menu mobile
   if (navToggle && navMenu) {
-    navToggle.addEventListener('click', () => {
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation(); // empêche le clic de remonter au document
       navToggle.classList.toggle('open');
       navMenu.classList.toggle('open');
-      // Bloquer le scroll quand le menu est ouvert
       document.body.style.overflow = navMenu.classList.contains('open') ? 'hidden' : '';
     });
+
+    // Fermer en cliquant sur un lien
     navMenu.querySelectorAll('a').forEach(a =>
-      a.addEventListener('click', () => {
-        navToggle.classList.remove('open');
-        navMenu.classList.remove('open');
-        document.body.style.overflow = '';
-      })
+      a.addEventListener('click', () => closeMenu())
     );
+
+    // ── CLIC EN DEHORS DU MENU ─────────────────────────────
+    // On écoute sur le document entier
+    document.addEventListener('click', (e) => {
+      if (!navMenu.classList.contains('open')) return;
+      // Si le clic n'est pas dans navMenu ni sur navToggle → fermer
+      if (!navMenu.contains(e.target) && !navToggle.contains(e.target)) {
+        closeMenu();
+      }
+    });
+    // ───────────────────────────────────────────────────────
 
     // ── SWIPE POUR FERMER ──────────────────────────────────
     let touchStartX = 0;
     let touchStartY = 0;
+    let isSwiping = false;
 
-    navMenu.addEventListener('touchstart', (e) => {
+    // On écoute sur TOUT le document (pas seulement navMenu)
+    // pour capturer le swipe même si le doigt commence hors du menu
+    document.addEventListener('touchstart', (e) => {
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
+      isSwiping = false;
     }, { passive: true });
 
-    navMenu.addEventListener('touchend', (e) => {
+    document.addEventListener('touchmove', (e) => {
+      if (!navMenu.classList.contains('open')) return;
+      const deltaX = e.touches[0].clientX - touchStartX;
+      const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
+      // Détecter un swipe horizontal (pas un scroll vertical)
+      if (Math.abs(deltaX) > 10 && deltaY < 50) {
+        isSwiping = true;
+      }
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (!navMenu.classList.contains('open')) return;
       const deltaX = e.changedTouches[0].clientX - touchStartX;
       const deltaY = Math.abs(e.changedTouches[0].clientY - touchStartY);
 
-      // Swipe vers la droite (deltaX > 60) et pas un scroll vertical
-      if (deltaX > 60 && deltaY < 80) {
-        navToggle.classList.remove('open');
-        navMenu.classList.remove('open');
-        document.body.style.overflow = '';
+      // Swipe vers la DROITE (menu vient de la gauche) OU vers la GAUCHE
+      // Seuil : 50px horizontal, moins de 80px vertical
+      if (isSwiping && Math.abs(deltaX) > 50 && deltaY < 80) {
+        closeMenu();
       }
+      isSwiping = false;
     }, { passive: true });
     // ───────────────────────────────────────────────────────
   }
